@@ -54,8 +54,9 @@ DATA_CONFIG:
               WORLD_SCALE_RANGE: [0.95, 1.05]
 
             - NAME: random_world_translation
-              WORLD_TRANSLATION_RANGE: [ -0.2, 0.2 ]
+              # WORLD_TRANSLATION_RANGE: [ -0.2, 0.2 ] # no longer used
               ALONG_AXIS_LIST: ['x', 'y', 'z']
+              NOISE_TRANSLATE_STD: 1.0
 
             - NAME: random_local_translation
               LOCAL_TRANSLATION_RANGE: [0.95, 1.05]
