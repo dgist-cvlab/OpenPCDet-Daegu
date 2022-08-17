@@ -53,6 +53,9 @@ def train_one_epoch(model, optimizer, train_loader, model_func, lr_scheduler, ac
         clip_grad_norm_(model.parameters(), optim_cfg.GRAD_NORM_CLIP)
         optimizer.step()
 
+        if hasattr(model, 'doEMA') and model.doEMA == True:
+            model.update_ema()
+
         accumulated_iter += 1
 
         cur_batch_time = time.time() - end
