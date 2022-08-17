@@ -229,10 +229,14 @@ class DataAugmentor(object):
         return data_dict
 
     def split_random_drop(self, data_dict=None, config=None):
-        # TODO: split 하되, 이어지는 과정이 다 이어지도록 해야 함.
         if data_dict is None:
             return partial(self.split_random_drop, config=config)
         gt_boxes, points = data_dict['gt_boxes'], data_dict['points']
+
+        factor = config['RATIO_FACTOR']
+        selected = np.random.randint(0, points.shape[0], np.long(points.shape[0] * factor))
+        points = points[selected]
+
         data_dict['gt_boxes_shadow'] = gt_boxes
         data_dict['points_shadow'] = points
         return data_dict
