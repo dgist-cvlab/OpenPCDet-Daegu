@@ -228,9 +228,9 @@ class DataAugmentor(object):
         data_dict['points'] = points
         return data_dict
 
-    def split_random_drop(self, data_dict=None, config=None):
+    def shadow_random_drop(self, data_dict=None, config=None):
         if data_dict is None:
-            return partial(self.split_random_drop, config=config)
+            return partial(self.shadow_random_drop, config=config)
         gt_boxes, points = data_dict['gt_boxes'], data_dict['points']
 
         factor = config['RATIO_FACTOR']

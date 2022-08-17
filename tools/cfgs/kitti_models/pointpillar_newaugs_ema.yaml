@@ -70,7 +70,8 @@ DATA_CONFIG:
               INTENSITY_RANGE: [ 0, 0.2 ]
               DIRECTION: ['top']
 
-            - NAME: split_random_drop
+            - NAME: shadow_random_drop
+              RATIO_FACTOR: 0.5
 
 MODEL:
     NAME: PointPillarDual
