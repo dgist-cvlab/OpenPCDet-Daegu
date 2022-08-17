@@ -13,16 +13,25 @@ class PointPillarDual(Detector3DTemplate):
         # self.module_list = self.build_networks()
         super().__init__(model_cfg, num_class, dataset)
         self.doEMA = True
-        self.model_direct = PointPillar(model_cfg, num_class, dataset)
-        self.model_shadow = PointPillar(model_cfg, num_class, dataset)
+        self.add_module(
+            'model_direct',
+            PointPillar(model_cfg, num_class, dataset)
+        )
+        self.add_module(
+            'model_shadow',
+            PointPillar(model_cfg, num_class, dataset)
+        )
         self.model_shadow.requires_grad_(False)
-        self.ema = EMA(
+        self.add_module(
+            'ema',
+            EMA(
                 self.model_direct,
                 ema_model = self.model_shadow,
                 beta = 0.9999,              # exponential moving average factor
                 update_after_step = 100,    # only after this number of .update() calls will it start updating
                 update_every = 10,          # how often to actually update, to save on compute (updates every 10th .update() call)
             )
+        )
         self.add_module(
             'mseloss',
             nn.MSELoss(size_average=None, reduce=None, reduction='mean')
