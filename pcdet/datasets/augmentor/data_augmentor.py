@@ -228,6 +228,16 @@ class DataAugmentor(object):
         data_dict['points'] = points
         return data_dict
 
+    def split_random_drop(self, data_dict=None, config=None):
+        # TODO: split 하되, 이어지는 과정이 다 이어지도록 해야 함.
+        if data_dict is None:
+            return partial(self.split_random_drop, config=config)
+        gt_boxes, points = data_dict['gt_boxes'], data_dict['points']
+        data_dict['gt_boxes_shadow'] = gt_boxes
+        data_dict['points_shadow'] = points
+        return data_dict
+
+
     def forward(self, data_dict):
         """
         Args:
@@ -257,4 +267,8 @@ class DataAugmentor(object):
                 data_dict['gt_boxes2d'] = data_dict['gt_boxes2d'][gt_boxes_mask]
 
             data_dict.pop('gt_boxes_mask')
+        if 'gt_boxes_shadow' in data_dict:
+            data_dict['gt_boxes_shadow'][:, 6] = common_utils.limit_period(
+                data_dict['gt_boxes_shadow'][:, 6], offset=0.5, period=2 * np.pi
+            )
         return data_dict
