@@ -39,16 +39,16 @@ class PointFeatureEncoder(object):
             data_dict['points'] = data_dict['points'][dt <= max_dt]
         
         # if shadow exist
-        if data_dict.get('points_shadow', None) is not None:
-            data_dict['points_shadow'], use_lead_xyz = getattr(self, self.point_encoding_config.encoding_type)(
-                data_dict['points_shadow']
+        if data_dict.get('points_aug2', None) is not None:
+            data_dict['points_aug2'], use_lead_xyz = getattr(self, self.point_encoding_config.encoding_type)(
+                data_dict['points_aug2']
             )
             if self.point_encoding_config.get('filter_sweeps', False) and 'timestamp' in self.src_feature_list:
                 max_sweeps = self.point_encoding_config.max_sweeps
                 idx = self.src_feature_list.index('timestamp')
-                dt = np.round(data_dict['points_shadow'][:, idx], 2)
+                dt = np.round(data_dict['points_aug2'][:, idx], 2)
                 max_dt = sorted(np.unique(dt))[min(len(np.unique(dt))-1, max_sweeps-1)]
-                data_dict['points_shadow'] = data_dict['points_shadow'][dt <= max_dt]
+                data_dict['points_aug2'] = data_dict['points_aug2'][dt <= max_dt]
 
         return data_dict
 

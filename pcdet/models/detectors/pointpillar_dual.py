@@ -43,8 +43,8 @@ class PointPillarDual(Detector3DTemplate):
     def forward(self, batch_dict):
         if self.training:
             batch_shadow = copy.deepcopy(batch_dict)
-            batch_shadow['points'] = batch_shadow.pop('points_shadow')
-            batch_shadow['gt_boxes'] = batch_shadow.pop('gt_boxes_shadow')
+            batch_shadow['points'] = batch_shadow.pop('points_aug2')
+            batch_shadow['gt_boxes'] = batch_shadow.pop('gt_boxes_aug2')
 
         for cur_module in self.model_direct.module_list:
             batch_dict = cur_module(batch_dict)

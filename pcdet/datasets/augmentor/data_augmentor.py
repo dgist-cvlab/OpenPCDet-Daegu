@@ -237,8 +237,8 @@ class DataAugmentor(object):
         selected = np.random.randint(0, points.shape[0], np.long(points.shape[0] * factor))
         points = points[selected]
 
-        data_dict['gt_boxes_shadow'] = gt_boxes
-        data_dict['points_shadow'] = points
+        data_dict['gt_boxes_aug2'] = gt_boxes
+        data_dict['points_aug2'] = points
         return data_dict
 
 
@@ -271,8 +271,8 @@ class DataAugmentor(object):
                 data_dict['gt_boxes2d'] = data_dict['gt_boxes2d'][gt_boxes_mask]
 
             data_dict.pop('gt_boxes_mask')
-        if 'gt_boxes_shadow' in data_dict:
-            data_dict['gt_boxes_shadow'][:, 6] = common_utils.limit_period(
-                data_dict['gt_boxes_shadow'][:, 6], offset=0.5, period=2 * np.pi
+        if 'gt_boxes_aug2' in data_dict:
+            data_dict['gt_boxes_aug2'][:, 6] = common_utils.limit_period(
+                data_dict['gt_boxes_aug2'][:, 6], offset=0.5, period=2 * np.pi
             )
         return data_dict

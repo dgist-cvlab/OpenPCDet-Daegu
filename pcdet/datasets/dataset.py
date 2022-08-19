@@ -144,11 +144,11 @@ class DatasetTemplate(torch_data.Dataset):
             if data_dict.get('gt_boxes2d', None) is not None:
                 data_dict['gt_boxes2d'] = data_dict['gt_boxes2d'][selected]
 
-            if data_dict.get('gt_boxes_shadow', None) is not None:
-                data_dict['gt_boxes_shadow'] = data_dict['gt_boxes_shadow'][selected]
+            if data_dict.get('gt_boxes_aug2', None) is not None:
+                data_dict['gt_boxes_aug2'] = data_dict['gt_boxes_aug2'][selected]
                 gt_classes = np.array([self.class_names.index(n) + 1 for n in data_dict['gt_names']], dtype=np.int32)
-                gt_boxes = np.concatenate((data_dict['gt_boxes_shadow'], gt_classes.reshape(-1, 1).astype(np.float32)), axis=1)
-                data_dict['gt_boxes_shadow'] = gt_boxes
+                gt_boxes = np.concatenate((data_dict['gt_boxes_aug2'], gt_classes.reshape(-1, 1).astype(np.float32)), axis=1)
+                data_dict['gt_boxes_aug2'] = gt_boxes
 
         if data_dict.get('points', None) is not None:
             data_dict = self.point_feature_encoder.forward(data_dict)
@@ -156,15 +156,15 @@ class DatasetTemplate(torch_data.Dataset):
         data_dict = self.data_processor.forward(
             data_dict=data_dict
         )
-        if 'points_shadow' in data_dict:
+        if 'points_aug2' in data_dict:
             # d['A'], d['B'] = d['B'], d['A']
-            data_dict['points'], data_dict['points_shadow'] = data_dict['points_shadow'], data_dict['points']
-            data_dict['gt_boxes'], data_dict['gt_boxes_shadow'] = data_dict['gt_boxes_shadow'], data_dict['gt_boxes']
+            data_dict['points'], data_dict['points_aug2'] = data_dict['points_aug2'], data_dict['points']
+            data_dict['gt_boxes'], data_dict['gt_boxes_aug2'] = data_dict['gt_boxes_aug2'], data_dict['gt_boxes']
             data_dict = self.data_processor.forward(
                 data_dict=data_dict
             )
-            data_dict['points'], data_dict['points_shadow'] = data_dict['points_shadow'], data_dict['points']
-            data_dict['gt_boxes'], data_dict['gt_boxes_shadow'] = data_dict['gt_boxes_shadow'], data_dict['gt_boxes']
+            data_dict['points'], data_dict['points_aug2'] = data_dict['points_aug2'], data_dict['points']
+            data_dict['gt_boxes'], data_dict['gt_boxes_aug2'] = data_dict['gt_boxes_aug2'], data_dict['gt_boxes']
 
         if self.training and len(data_dict['gt_boxes']) == 0:
             new_index = np.random.randint(self.__len__())
@@ -187,13 +187,13 @@ class DatasetTemplate(torch_data.Dataset):
             try:
                 if key in ['voxels', 'voxel_num_points']:
                     ret[key] = np.concatenate(val, axis=0)
-                elif key in ['points', 'voxel_coords', 'points_shadow']:
+                elif key in ['points', 'voxel_coords', 'points_aug2']:
                     coors = []
                     for i, coor in enumerate(val):
                         coor_pad = np.pad(coor, ((0, 0), (1, 0)), mode='constant', constant_values=i)
                         coors.append(coor_pad)
                     ret[key] = np.concatenate(coors, axis=0)
-                elif key in ['gt_boxes', 'gt_boxes_shadow']:
+                elif key in ['gt_boxes', 'gt_boxes_aug2']:
                     max_gt = max([len(x) for x in val])
                     batch_gt_boxes3d = np.zeros((batch_size, max_gt, val[0].shape[-1]), dtype=np.float32)
                     for k in range(batch_size):
