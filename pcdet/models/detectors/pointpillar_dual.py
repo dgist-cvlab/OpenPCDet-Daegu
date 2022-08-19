@@ -41,29 +41,32 @@ class PointPillarDual(Detector3DTemplate):
         self.ema.update()
 
     def forward(self, batch_dict):
+        # batch_dict: original pipeline
+        # batch_dict_aug2: more augmented data pipeline
         if self.training:
-            batch_shadow = copy.deepcopy(batch_dict)
-            batch_shadow['points'] = batch_shadow.pop('points_aug2')
-            batch_shadow['gt_boxes'] = batch_shadow.pop('gt_boxes_aug2')
+            batch_dict_aug2 = copy.deepcopy(batch_dict)
+            batch_dict_aug2['points'] = batch_dict_aug2.pop('points_aug2')
+            batch_dict_aug2['gt_boxes'] = batch_dict_aug2.pop('gt_boxes_aug2')
+            for cur_module in self.model_direct.module_list:
+                batch_dict_aug2 = cur_module(batch_dict_aug2)
 
-        for cur_module in self.model_direct.module_list:
-            batch_dict = cur_module(batch_dict)
-
-        if self.training:
             for cur_module in self.model_shadow.module_list:
-                batch_shadow = cur_module(batch_shadow)
+                batch_dict = cur_module(batch_dict)
 
-            loss, tb_dict, disp_dict = self.get_training_loss(batch_dict, batch_shadow)
+            loss, tb_dict, disp_dict = self.get_training_loss(batch_dict, batch_dict_aug2)
 
             ret_dict = {
                 'loss': loss
             }
             return ret_dict, tb_dict, disp_dict
         else:
+            for cur_module in self.model_direct.module_list:
+                batch_dict = cur_module(batch_dict)
+
             pred_dicts, recall_dicts = self.model_direct.post_processing(batch_dict)
             return pred_dicts, recall_dicts
 
-    def get_training_loss(self, batch_dict, batch_shadow):
+    def get_training_loss(self, batch_dict, batch_dict_aug2):
         disp_dict = {}
 
         # default loss
@@ -74,7 +77,7 @@ class PointPillarDual(Detector3DTemplate):
         }
 
         # consistency loss
-        loss_consist = self.mseloss(batch_dict['spatial_features_2d'], batch_shadow['spatial_features_2d'])
+        loss_consist = self.mseloss(batch_dict['spatial_features_2d'], batch_dict_aug2['spatial_features_2d'])
 
         loss = loss_rpn + loss_consist
         return loss, tb_dict, disp_dict
