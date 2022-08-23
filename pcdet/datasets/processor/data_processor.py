@@ -75,6 +75,20 @@ class DataProcessor(object):
             cur_processor = getattr(self, cur_cfg.NAME)(config=cur_cfg)
             self.data_processor_queue.append(cur_processor)
 
+    def offset_points(self, data_dict=None, config=None):
+        if data_dict is None:
+            return partial(self.offset_points, config=config)
+
+        offset = config.OFFSET
+        offset = np.array(offset).reshape(1,3)
+        if data_dict.get('points', None) is not None:
+            data_dict['points'][:,0:3] += offset
+
+        if data_dict.get('gt_boxes', None) is not None:
+            data_dict['gt_boxes'][:,0:3] += offset
+
+        return data_dict
+
     def mask_points_and_boxes_outside_range(self, data_dict=None, config=None):
         if data_dict is None:
             return partial(self.mask_points_and_boxes_outside_range, config=config)
