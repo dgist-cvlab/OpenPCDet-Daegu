@@ -187,6 +187,13 @@ class WaymoDataset(DatasetTemplate):
         else:
             points = self.get_lidar(sequence_name, sample_idx)
 
+        if self.dataset_cfg.get('LIDAR_INDEX', False):
+            lidar_idx = np.array(self.dataset_cfg.get('LIDAR_INDEX', False))
+            lidar_pnt_nums = info['num_points_of_each_lidar']
+            lidar_pnt_cum = [sum(lidar_pnt_nums[:i]) for i in range(len(lidar_pnt_nums)+1)]
+            # assert lidar_idx in range(1,6)
+            points = np.concatenate([points[lidar_pnt_cum[lidx-1]:lidar_pnt_cum[lidx]] for lidx in lidar_idx], axis=0)
+
         input_dict = {
             'points': points,
             'frame_id': info['frame_id'],
