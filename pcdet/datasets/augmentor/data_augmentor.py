@@ -241,6 +241,20 @@ class DataAugmentor(object):
         data_dict['points_aug2'] = points
         return data_dict
 
+    def shadow_halflane_drop(self, data_dict=None, config=None):
+        if data_dict is None:
+            return partial(self.shadow_halflane_drop, config=config)
+        gt_boxes, points = data_dict['gt_boxes'], data_dict['points']
+
+        src_min_angle = config['ORIGIN_VFOV'][0]
+        src_max_angle = config['ORIGIN_VFOV'][1]
+        src_lane_num = config['ORIGIN_LANE_NUM']
+        tar_lane_num = config['TARGET_LANE_NUM']
+        half_points = common_utils.drop_lidar_lane(points, src_min_angle, src_max_angle, src_lane_num, tar_lane_num)
+
+        data_dict['gt_boxes_aug2'] = gt_boxes
+        data_dict['points_aug2'] = half_points
+        return data_dict
 
     def forward(self, data_dict):
         """
