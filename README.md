@@ -1,4 +1,37 @@
-<img src="docs/open_mmlab.png" align="right" width="30%">
+<!-- <img src="docs/open_mmlab.png" align="right" width="30%"> -->
+
+# Daegu Dataset
+
+To convert Daegu Dataset to Waymo form, just follow the instructions below.
+
+```directory
+OpenPCDet-Daegu
+└── data
+    ├── Daegu_processed
+    │   ├── ImageSets
+    │   │   ├── train.txt
+    │   │   └── val.txt
+    │   └── daegu_processed_data_v0_5_0 (where convert.py output will be saved)
+    └── Daegu
+        ├── Songhae
+        │   ├── LiDAR_gt
+        │   │   ├── 1636510682.269216454.xml
+        │   │   ├── 1636510677.773812074.xml
+        │   │   └── ...
+        │   └── LiDAR_raw
+        │       ├── 1636510682.269216454.pcd
+        │       ├── 1636510677.773812074.pcd
+        │       └── ...
+        └── Daegu_6
+            └── (same as Songhae)
+```
+
+Then run to convert into Waymo form.
+```bash
+python convert.py
+```
+
+Then follow the instruction based on original OpenPCDet
 
 # OpenPCDet
 
