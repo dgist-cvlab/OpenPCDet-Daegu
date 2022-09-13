@@ -28,7 +28,7 @@ OpenPCDet-Daegu
 
 Then run to convert into Waymo form.
 ```bash
-python convert.py
+python ./tools/convert_daegu_to_waymo.py
 ```
 
 Then follow the instruction based on original OpenPCDet
