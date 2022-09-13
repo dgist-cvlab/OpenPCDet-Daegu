@@ -1,6 +1,6 @@
 DATASET: 'DaeguDataset'
 DATA_PATH: '../data/Daegu_processed'
-PROCESSED_DATA_TAG: 'waymo_processed_data_v0_5_0'
+PROCESSED_DATA_TAG: 'daegu_processed_data_v0_1_0'
 
 POINT_CLOUD_RANGE: [-75.2, -75.2, -2, 75.2, 75.2, 4]
 

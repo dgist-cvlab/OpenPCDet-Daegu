@@ -5,15 +5,15 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from tqdm import tqdm
 
-path_root = '/home/cv11/OpenPCDet-master/data'
-Scene_list = ['Songhae', 'Daegu_6']
+path_root = '../../OpenPCDet-Daegu/data'
+Scene_list = ['Songhae', 'Daegu_6'] # add scene names here
 
 class_map = {
-        'car' : 'Vehicle',
-        'truck' : 'Vehicle',
-        'pedestrian' : 'Pedestrian',
-        'motorcycle' : 'Cyclist',
-        'bicycle' : 'Cyclist'
+            'car' : 'Vehicle',
+            'truck' : 'Vehicle',
+            'pedestrian' : 'Pedestrian',
+            'motorcycle' : 'Cyclist',
+            'bicycle' : 'Cyclist'
         }
 
 Daegu_label = []
@@ -21,10 +21,9 @@ for Scene in Scene_list:
     print('Scene name : {}'.format(Scene))
     Daegu_pcd_folder = os.path.join(path_root, 'Daegu', Scene, 'LiDAR_raw')
     Daegu_label_folder = os.path.join(path_root, 'Daegu', Scene, 'LiDAR_gt')
-    Processed_folder = os.path.join(path_root, 'Daegu_processed')
-    Processed_scene_folder = os.path.join(path_root, 'Daegu_processed', Scene)
-    if not os.path.isdir(Processed_scene_folder):
-        os.makedirs(Processed_scene_folder)
+    Processed_folder = os.path.join(path_root, 'Daegu_processed', 'dageu_processed_data_v0_1_0')
+    Processed_scene_folder = os.path.join(path_root, 'Daegu_processed', 'dageu_processed_data_v0_1_0', Scene)
+    os.makedirs(Processed_scene_folder, exist_ok=True)
 
     Daegu_labels = sorted(glob.glob(os.path.join(Daegu_label_folder, '*.xml')))
     scene_index_n = len(Daegu_labels)
