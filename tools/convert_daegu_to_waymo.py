@@ -62,7 +62,7 @@ for Scene in Scene_list:
         for object in root.iter("object"):
             tracking_ids = object.find("bndbox").findtext("track_id")
             class_name_ori = object.find("class").findtext("sub_class")
-            if class_name_ori == '""':
+            if class_name_ori in ['""', "''", None, '']:
                 class_name_ori = object.findtext("class").split("\n")[0]
                 if class_name_ori != 'pedestrian' and class_name_ori != 'bicycle':
                     print(object.findtext("class"))
