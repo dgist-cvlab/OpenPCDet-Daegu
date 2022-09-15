@@ -123,7 +123,7 @@ for Scene in Scene_list:
         tracking_difficulties = np.asarray(tracking_difficulties)
         gt_boxes_lidars = np.asarray(gt_boxes_lidars)
 
-        Daegu_label.append({'point_cloud': {'num_features': 3, 'lidar_sequence': Scene, 'sample_idx': i},
+        info = ({'point_cloud': {'num_features': 3, 'lidar_sequence': Scene, 'sample_idx': i},
         'frame_id': Scene + '_' + '{0:03d}'.format(i),
         'metadata': {'context_name': Scene + '_' + '{0:03d}'.format(i), 'timestamp_micros': 0},
         'image': {'image_shape_0': (1280, 1920), 'image_shape_1': (1280, 1920), 'image_shape_2': (1280,1920), 'image_shape_3': (1280, 1920), 'image_shape_4': (1280,1920)},
@@ -131,11 +131,13 @@ for Scene in Scene_list:
         'annos': {'name': name, 'difficulty': tracking_difficulties, 'dimensions': dimensions, 'location': locations, 'heading_angles': heading_angles, 'obj_ids': obj_ids,
         'tracking_difficulty': tracking_difficulties, 'num_points_in_gt': num_points_in_gts, 'gt_boxes_lidar': gt_boxes_lidars},
         'num_points_of_each_lidar': [len(pc_array), 0, 0, 0, 0]})
+        Daegu_scene_label.append(info)
+        Daegu_label.append(info)
 
 
     #Scene pkl save
     with open(os.path.join(Processed_scene_folder, Scene + '.pkl'), 'wb') as f:
-        pickle.dump(Daegu_label, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(Daegu_scene_label, f, pickle.HIGHEST_PROTOCOL)
 
 #Daegu whole pkl save
 with open(os.path.join(Processed_folder, 'Daegu_processed_data_infos_train.pkl'), 'wb') as f:
