@@ -6,7 +6,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 path_root = '../../OpenPCDet-Daegu/data'
-Scene_list = ['Songhae', 'Daegu_6'] # add scene names here
+Scene_list = ['Techpol_downtown', 'Techpol', 'Techpol_night','Songhae', 'Daegu_6'] # add scene names here
 
 class_map = {
             'car' : 'Vehicle',
@@ -33,7 +33,7 @@ for Scene in Scene_list:
         #pcd -> npy format
         pcd_name = Path(Daegu_labels[i]).stem
         Daegu_pcd_path = os.path.join(Daegu_pcd_folder, pcd_name + '.pcd')
-        pc = open3d.read_point_cloud(Daegu_pcd_path)
+        pc = open3d.io.read_point_cloud(Daegu_pcd_path)
         pc_array = np.asarray(pc.points)
         pc_save_path = os.path.join(Processed_scene_folder, '{0:04d}'.format(i))
 
